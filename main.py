@@ -40,7 +40,7 @@ TEST_TOKEN = "NzMyNjg4ODY5OTA0MDg5MjE5.Xw4PuA.99GFI8iJK76_YbbcvO20ZjJk_4E"
 TOKEN = TEST_TOKEN
 # PLEASE DO BE CAREFUL WITH THAT SHIT YOU HEAR ME
 BOT_OWNER_IDS = [285832267216191498]
-DEFAULT_PREFIX = "!"
+DEFAULT_PREFIX = "*"
 # Channel IDs
 ERROR_LOG_ID = 732683641024413851
 COMMAND_LOG_ID = 732683641024413852
@@ -236,64 +236,12 @@ async def statuschange(client):
 
 @client.command(help="Shows a list of commands and detailed command descriptions.",
                 usage="(<cog>|<command>)")
-async def help(ctx, arg='all'):
-    cogs = [c for c in client.cogs.keys()]
-    if arg == 'all':
-        help_embed = discord.Embed(title="Help Menu", 
-                                   colour=discord.Colour.green(), 
-                                   description="Type `{0}help <command>` for more information".format(ctx.prefix))
-        for cog in cogs:
-            cog_commands = client.get_cog(cog).get_commands()
-            if cog=="BotOwners":
-                if ctx.author.id in client.BOT_OWNER_IDS:
-                    cog_commands = [c.name for c in cog_commands]
-                    cog_commands = "`, `".join(cog_commands)
-                    cog_commands = "`" + cog_commands + "`"
-                    help_embed.add_field(name=cog, value=cog_commands)
-            elif cog=="Admins":
-                if ctx.author.guild_permissions.administrator or ctx.author.id in client.BOT_OWNER_IDS:
-                    cog_commands = [c.name for c in cog_commands]
-                    cog_commands = "`, `".join(cog_commands)
-                    cog_commands = "`" + cog_commands + "`"
-                    help_embed.add_field(name=cog, value=cog_commands)
-            else:
-                cog_commands = [c.name for c in cog_commands]
-                cog_commands = "`, `".join(cog_commands)
-                cog_commands = "`" + cog_commands + "`"
-                help_embed.add_field(name=cog, value=cog_commands)
-                
-    elif arg in [c.name for c in client.commands]:
-        command = client.get_command(arg)
-        command_cog = command.cog_name
-        if command_cog=="BotOwners":
-                if ctx.author.id in client.BOT_OWNER_IDS:
-                    help_embed = discord.Embed(title=f"Help menu: `{arg}` commmand", colour=discord.Colour.green(), description=f"```{command.help}```")
-                    help_embed.add_field(name="Command usage", value=f"`{ctx.prefix}{command.name} {command.usage}`")
-                    aliases = command.aliases
-                    if not aliases == []:
-                        aliases = "`, `".join(aliases)
-                        help_embed.add_field(name="Aliases", value="`{}`, `{}`".format(arg,aliases), inline=False)
-        elif command_cog=="Admins":
-                if ctx.author.guild_permissions.administrator or ctx.author.id in client.BOT_OWNER_IDS:
-                    help_embed = discord.Embed(title=f"Help menu: `{arg}` commmand", colour=discord.Colour.green(), description=f"```{command.help}```")
-                    help_embed.add_field(name="Command usage", value=f"`{ctx.prefix}{command.name} {command.usage}`")
-                    aliases = command.aliases
-                    if not aliases == []:
-                        aliases = "`, `".join(aliases)
-                        help_embed.add_field(name="Aliases", value="`{}`, `{}`".format(arg,aliases), inline=False)
-        else:
-            help_embed = discord.Embed(title=f"Help menu: `{arg}` commmand", colour=discord.Colour.green(), description=f"```{command.help}```")
-            help_embed.add_field(name="Command usage", value=f"`{ctx.prefix}{command.name} {command.usage}`")
-            aliases = command.aliases
-            if not aliases == []:
-                aliases = "`, `".join(aliases)
-                help_embed.add_field(name="Aliases", value="`{}`, `{}`".format(arg,aliases), inline=False)
-    else:
-        help_embed = discord.Embed(title="Command not found")
-    help_embed.add_field(name="More info on our website", value="https://zelquest.com/commands", inline=False)
-    help_embed.set_thumbnail(url=client.user.avatar_url)
-    help_embed.set_footer(text=f'Requested by {ctx.message.author.name}', icon_url=ctx.author.avatar_url)
+async def help(ctx):
+    help_embed = discord.Embed(title="Help Menu", colour=discord.Colour.green())
+    help_embed.add_field(name=f"{ctx.prefix}ping", value="You know what that does already, don't you?")
+    help_embed.add_field(name=f"{ctx.prefix}quote", value="Generates a random AI-generated quote from the awesome inspirobot.me!")
     await ctx.send(embed=help_embed)
+    
 
 
 for filename in os.listdir(os.path.join(ROOT_DIR, "cogs")):
