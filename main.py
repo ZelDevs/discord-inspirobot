@@ -103,6 +103,7 @@ async def on_message(msg):
     elif TOKEN == MAIN_TOKEN:
         if not msg.guild:
             await _msglog(msg)
+            await client.process_commands(msg)
         elif not msg.channel.id == TEST_TEST_ID:
             await client.process_commands(msg)
         else:
