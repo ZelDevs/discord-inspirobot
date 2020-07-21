@@ -51,7 +51,7 @@ class BotOwners(commands.Cog):
         
     @commands.command(usage="<user> <content*>",
                       help="Sends a message to a specified user")
-    async def dm(self, ctx, user: discord.Member, *, content):
+    async def dm(self, ctx, user: discord.User, *, content):
         if not user:
             raise commands.BadArgument
         await user.send(content)
