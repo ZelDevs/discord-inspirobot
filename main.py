@@ -206,7 +206,6 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=embed)
     else:
         print(error, file=sys.stderr)
-        await ctx.send(f"An error occured... Try using `{ctx.prefix}help`.")
         if TOKEN==MAIN_TOKEN:
             channel_to_use = client.ERROR_LOG
         else:
