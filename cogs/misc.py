@@ -17,6 +17,7 @@ class Misc(commands.Cog):
         req = requests.get("http://inspirobot.me/api?generate=true")
         if req.status_code == 200:
             embed = discord.Embed(colour=discord.Colour.green())
+            embed.set_footer(text="Created using inspirobot.me")
             embed.set_image(url=req.text)
             await ctx.send(embed=embed)
         else:

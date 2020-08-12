@@ -196,17 +196,17 @@ async def on_command_error(ctx, error):
         embed = discord.Embed(title="You cannot use this command.")
         await ctx.send(embed=embed)
     elif isinstance(error, commands.MissingRequiredArgument):
-        embed = discord.Embed(title=f"Incorrect command usage: A required argument is missing. \nTry using `{ctx.prefix}help {ctx.command.name}`")
+        embed = discord.Embed(title=f"Incorrect command usage: A required argument is missing. \nTry using `{ctx.prefix}help`")
         await ctx.send(embed=embed)
     elif isinstance(error, commands.TooManyArguments):
-        embed = discord.Embed(title=f"Incorrect command usage: Too many arguments passed. \nTry using `{ctx.prefix}help {ctx.command.name}`")
+        embed = discord.Embed(title=f"Incorrect command usage: Too many arguments passed. \nTry using `{ctx.prefix}help`")
         await ctx.send(embed=embed)
     elif isinstance(error, commands.BadArgument):
-        embed = discord.Embed(title=f"Incorrect command usage: An argument was not passed properly. \nTry using `{ctx.prefix}help {ctx.command.name}`")
+        embed = discord.Embed(title=f"Incorrect command usage: An argument was not passed properly. \nTry using `{ctx.prefix}help`")
         await ctx.send(embed=embed)
     else:
         print(error, file=sys.stderr)
-        await ctx.send("An error occured... Try using `{ctx.prefix}help {ctx.command.name}`. If you think it's a bug, report it here: https://discord.gg/nme7hZa")
+        await ctx.send(f"An error occured... Try using `{ctx.prefix}help`. If you think it's a bug, report it here: https://discord.gg/nme7hZa")
         if TOKEN==MAIN_TOKEN:
             channel_to_use = client.ERROR_LOG
         else:

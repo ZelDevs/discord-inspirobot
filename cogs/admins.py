@@ -18,10 +18,10 @@ class Admins(commands.Cog):
         with open(os.path.join(self.client.DATA_DIR, "prefixes.json"), "r") as f:
             prefixes = json.load(f)
         if prefix==None:
-            await ctx.send("The current prefix is `{}` (but mentionning me also works!)".format(prefixes[str(ctx.guild.id)]))
+            await ctx.send("The current prefix is `{}` (but mentioning me also works!)".format(prefixes[str(ctx.guild.id)]))
         else:
             prefixes[str(ctx.guild.id)] = prefix
-            await ctx.send("New prefix is `{}` (mentionning me also works!)".format(prefix))
+            await ctx.send("New prefix is `{}` (mentioning me also works!)".format(prefix))
             with open(os.path.join(self.client.DATA_DIR, "prefixes.json"), "w") as f:
                 json.dump(prefixes, f, indent=4)
             
