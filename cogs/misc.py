@@ -22,6 +22,11 @@ class Misc(commands.Cog):
             await ctx.send(embed=embed)
         else:
             await ctx.send("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
+            
+    @commands.command()
+    async def invite(self, ctx):
+        embed = discord.Embed(title="Invite the bot to your server!", description="https://discord.com/api/oauth2/authorize?client_id=732683980352127038&permissions=51201&scope=bot")
+        await ctx.send(embed=embed)
     
     
 def setup(client):

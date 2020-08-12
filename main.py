@@ -206,7 +206,7 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=embed)
     else:
         print(error, file=sys.stderr)
-        await ctx.send(f"An error occured... Try using `{ctx.prefix}help`. If you think it's a bug, report it here: https://discord.gg/nme7hZa")
+        await ctx.send(f"An error occured... Try using `{ctx.prefix}help`.")
         if TOKEN==MAIN_TOKEN:
             channel_to_use = client.ERROR_LOG
         else:
@@ -239,8 +239,10 @@ async def statuschange(client):
                 usage="(<cog>|<command>)")
 async def help(ctx):
     help_embed = discord.Embed(title="Help Menu", colour=discord.Colour.green())
+    help_embed.add_field(name=f"{ctx.prefix}quote", value="Generates a random AI-generated quote from the awesome inspirobot.me!", inline=False)
+    help_embed.add_field(name=f"{ctx.prefix}invite", value="Sends an invite for the bot")
+    help_embed.add_field(name=f"{ctx.prefix}prefix [new]", value="Changes the guild prefix of the bot (admins only)")
     help_embed.add_field(name=f"{ctx.prefix}ping", value="You know what that does already, don't you?")
-    help_embed.add_field(name=f"{ctx.prefix}quote", value="Generates a random AI-generated quote from the awesome inspirobot.me!")
     await ctx.send(embed=help_embed)
     
 
