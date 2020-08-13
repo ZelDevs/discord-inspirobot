@@ -192,34 +192,34 @@ async def on_command_completion(ctx):
 @client.event
 async def on_command_error(ctx, error):
 
-    if isinstance(error, commands.CheckFailure):
-        embed = discord.Embed(title="You cannot use this command.")
-        await ctx.send(embed=embed)
-    elif isinstance(error, commands.MissingRequiredArgument):
-        embed = discord.Embed(title=f"Incorrect command usage: A required argument is missing. \nTry using `{ctx.prefix}help`")
-        await ctx.send(embed=embed)
-    elif isinstance(error, commands.TooManyArguments):
-        embed = discord.Embed(title=f"Incorrect command usage: Too many arguments passed. \nTry using `{ctx.prefix}help`")
-        await ctx.send(embed=embed)
-    elif isinstance(error, commands.BadArgument):
-        embed = discord.Embed(title=f"Incorrect command usage: An argument was not passed properly. \nTry using `{ctx.prefix}help`")
-        await ctx.send(embed=embed)
+    # if isinstance(error, commands.CheckFailure):
+    #     embed = discord.Embed(title="You cannot use this command.")
+    #     await ctx.send(embed=embed)
+    # elif isinstance(error, commands.MissingRequiredArgument):
+    #     embed = discord.Embed(title=f"Incorrect command usage: A required argument is missing. \nTry using `{ctx.prefix}help`")
+    #     await ctx.send(embed=embed)
+    # elif isinstance(error, commands.TooManyArguments):
+    #     embed = discord.Embed(title=f"Incorrect command usage: Too many arguments passed. \nTry using `{ctx.prefix}help`")
+    #     await ctx.send(embed=embed)
+    # elif isinstance(error, commands.BadArgument):
+    #     embed = discord.Embed(title=f"Incorrect command usage: An argument was not passed properly. \nTry using `{ctx.prefix}help`")
+    #     await ctx.send(embed=embed)
+    # else:
+    print(error, file=sys.stderr)
+    if TOKEN==MAIN_TOKEN:
+        channel_to_use = client.ERROR_LOG
     else:
-        print(error, file=sys.stderr)
-        if TOKEN==MAIN_TOKEN:
-            channel_to_use = client.ERROR_LOG
-        else:
-            channel_to_use = ctx
-        try:
-            guild_url = await ctx.channel.create_invite(unique=False, reason="Created for bot error logging purposes.")
-        except:
-            guild_url = "Missing permissions"
-        embed=discord.Embed(title="Traceback exception", colour=discord.Colour.red(), description="```{}```".format(ctx.message.content), url=ctx.message.jump_url)
-        embed.set_thumbnail(url=ctx.author.avatar_url)
-        embed.add_field(name="Context Info", value=f"""```Author: {ctx.message.author} ({ctx.message.author.id})\nChannel: #{ctx.channel.name} ({ctx.channel.id})\nServer: "{ctx.guild.name}" ({ctx.guild.id})\nServer invite: {guild_url}```""", inline=False, )
-        embed.add_field(name="Traceback info", value="```py\n{}```".format(error), inline=False)
-        embed.timestamp = datetime.datetime.utcnow()
-        await channel_to_use.send(embed=embed)
+        channel_to_use = ctx
+    try:
+        guild_url = await ctx.channel.create_invite(unique=False, reason="Created for bot error logging purposes.")
+    except:
+        guild_url = "Missing permissions"
+    embed=discord.Embed(title="Traceback exception", colour=discord.Colour.red(), description="```{}```".format(ctx.message.content), url=ctx.message.jump_url)
+    embed.set_thumbnail(url=ctx.author.avatar_url)
+    embed.add_field(name="Context Info", value=f"""```Author: {ctx.message.author} ({ctx.message.author.id})\nChannel: #{ctx.channel.name} ({ctx.channel.id})\nServer: "{ctx.guild.name}" ({ctx.guild.id})\nServer invite: {guild_url}```""", inline=False, )
+    embed.add_field(name="Traceback info", value="```py\n{}```".format(error), inline=False)
+    embed.timestamp = datetime.datetime.utcnow()
+    await channel_to_use.send(embed=embed)
 
 # TASK LOOPS
 

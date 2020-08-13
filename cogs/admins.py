@@ -7,9 +7,6 @@ import os
 class Admins(commands.Cog):
     def __init__(self, client):
         self.client = client
-        
-    async def cog_check(self, ctx):
-        return ctx.author.guild_permissions.administrator or ctx.author.id in self.client.BOT_OWNER_IDS
     
     @commands.command(aliases=['setprefix'],
                       help="Changes the guild prefix to the specified one, if there is no prefix specified then it just returns the current guild prefix.",
@@ -19,7 +16,7 @@ class Admins(commands.Cog):
             prefixes = json.load(f)
         if prefix==None:
             await ctx.send("The current prefix is `{}` (but mentioning me also works!)".format(prefixes[str(ctx.guild.id)]))
-        else:
+        elif ctx.author.guild_permissions.administrator or ctx.author.id in self.client.BOT_OWNER_IDS:
             prefixes[str(ctx.guild.id)] = prefix
             await ctx.send("New prefix is `{}` (mentioning me also works!)".format(prefix))
             with open(os.path.join(self.client.DATA_DIR, "prefixes.json"), "w") as f:
