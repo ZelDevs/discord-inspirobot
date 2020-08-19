@@ -14,14 +14,19 @@ class Misc(commands.Cog):
         
     @commands.command()
     async def quote(self, ctx):
-        req = requests.get("http://inspirobot.me/api?generate=true")
-        if req.status_code == 200:
-            embed = discord.Embed(colour=discord.Colour.green())
-            embed.set_footer(text="Created using inspirobot.me")
-            embed.set_image(url=req.text)
-            await ctx.send(embed=embed)
-        else:
-            await ctx.send("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
+        await ctx.trigger_typing()
+        try:
+            ag = {"User-Agent":"Mozilla/5.0"}
+            req = requests.get("http://inspirobot.me/api?generate=true",headers=ag)
+            if req.status_code == 200:
+                embed = discord.Embed(colour=discord.Colour.green())
+                embed.set_footer(text="Created using inspirobot.me")
+                embed.set_image(url=req.text)
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
+        except:
+            await ctx.send("Command failed successfully, please try again!")
             
     @commands.command()
     async def invite(self, ctx):
