@@ -45,9 +45,15 @@ class BotOwners(commands.Cog):
         
     @commands.command(usage="<channel> <content*>",
                       help="Sends a message in a specified channel")
-    async def say(self, ctx, location: discord.TextChannel, content):
-        await location.send(content)
-        await ctx.send("Message sent successfully.")
+    async def say(self, ctx, location, *, content):
+        location = location.replace("<#", "")
+        location = location.replace(">", "")
+        try:
+            channel = await self.client.fetch_channel(location)
+        except:
+            raise commands.BadArgument
+        await channel.send(content)
+        await ctx.send("Sent in {0} successfully.".format(channel.name))
         
     @commands.command(usage="<user> <content*>",
                       help="Sends a message to a specified user")
