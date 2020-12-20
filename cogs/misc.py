@@ -3,7 +3,7 @@ from discord.ext import commands
 import datetime
 import requests
 import socket
-ip = "192.168.1.100"
+ip = "192.168.1.141"
 port = 30201
 externalserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 externalserver.bind((ip,port))
