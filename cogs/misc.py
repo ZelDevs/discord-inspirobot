@@ -2,11 +2,28 @@ import discord
 from discord.ext import commands
 import datetime
 import requests
-
+import socket
+ip = "192.168.1.100"
+port = 30201
+externalserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+externalserver.bind((ip,port))
 class Misc(commands.Cog):
     def __init__(self, client):
         self.client = client
-    
+    def updateserver(self):
+        while True:
+            externalserver.settimeout(60)
+            try:
+                externalserver.listen()
+                conn, addr = externalserver.accept() 
+            except:continue
+            stmessage="Bot Online | Uptime: {}".format(str(datetime.datetime.utcnow()-self.client.starttime).replace(str(datetime.datetime.utcnow()-self.client.starttime)[-7:],""))
+            conn.send(stmessage).encode()
+    @commands.command()
+    async def on_ready(self, ctx):
+        usthread=threading.Thread(target=Misc.updateserver,args=(self,))
+        await asyncio.sleep(5)
+        usthread.start()
     @commands.command()
     async def ping(self, ctx):
         latency = datetime.datetime.utcnow()-ctx.message.created_at

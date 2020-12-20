@@ -1,7 +1,7 @@
 """
-Scervo Bot
-A Zelda-Themed RPG bot.
-Version 0.0.1
+Quote Bot
+Literally just quotes
+Version 1.2.0
  coding done by Phoeniix, Annoying Bokoblin, ElectronDev.
 """
 
@@ -49,7 +49,8 @@ SERVERS_JOINED_LOG_ID = 732683641024413854
 TEST_TEST_ID = 732683641024413848
 MAIN_TEST_ID = 732683641024413849
 ACTIVITY_TYPES = {"playing":discord.ActivityType.playing, "streaming":discord.ActivityType.streaming, "watching":discord.ActivityType.watching, "listening":discord.ActivityType.listening}
-
+intents = discord.Intents.default()
+intents.members = True
 class Client(commands.Bot):
     async def on_ready(self):
         #Define all constants which require the bot to be active OR that we need across all cogs here. to call them later, do client.[CONST] or self.client.[CONST] in a cog.
@@ -62,6 +63,7 @@ class Client(commands.Bot):
         self.SERVERS_JOINED_LOG = await self.fetch_channel(SERVERS_JOINED_LOG_ID)
         self.TEST_TEST = await self.fetch_channel(TEST_TEST_ID)
         self.MAIN_TEST = await self.fetch_channel(MAIN_TEST_ID)
+        self.starttime = datetime.datetime.utcnow()
 
         with open(os.path.join(DATA_DIR, "status.json"),"r") as f:
             self.STATUSES = json.load(f)
@@ -69,7 +71,7 @@ class Client(commands.Bot):
             self.STATUSES = cycle(self.STATUSES)
             statuschange.start(self)
         print("------------------")
-        print(datetime.datetime.utcnow())
+        print(self.starttime)
         print("Logged in as: {}".format(self.user))
         print("Default prefix: {}".format(DEFAULT_PREFIX))
         print("-------------------")
@@ -85,7 +87,7 @@ async def _get_prefix(client, message):
     prefix = prefixes.get(str(message.guild.id), DEFAULT_PREFIX)
     return commands.when_mentioned_or(prefix)(client, message)
 
-client = Client(command_prefix=_get_prefix, case_insensitive=True, owner_ids=BOT_OWNER_IDS, help_command=None)
+client = Client(command_prefix=_get_prefix, case_insensitive=True, owner_ids=BOT_OWNER_IDS, help_command=None,intents=intents)
 
 # EVENTS
 
