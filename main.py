@@ -50,7 +50,7 @@ TEST_TEST_ID = 732683641024413848
 MAIN_TEST_ID = 732683641024413849
 ACTIVITY_TYPES = {"playing":discord.ActivityType.playing, "streaming":discord.ActivityType.streaming, "watching":discord.ActivityType.watching, "listening":discord.ActivityType.listening}
 intents = discord.Intents.default()
-intents.members = True
+intents.members = False
 class Client(commands.Bot):
     async def on_ready(self):
         #Define all constants which require the bot to be active OR that we need across all cogs here. to call them later, do client.[CONST] or self.client.[CONST] in a cog.
