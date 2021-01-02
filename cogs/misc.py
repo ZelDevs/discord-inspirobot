@@ -17,7 +17,7 @@ class Misc(commands.Cog):
                 externalserver.listen()
                 conn, addr = externalserver.accept() 
             except:continue
-            stmessage="🟢 | Bot Online | Uptime: {}".format(str(datetime.datetime.utcnow()-self.client.starttime).replace(str(datetime.datetime.utcnow()-self.client.starttime)[-7:],""))
+            stmessage="🟢 | Bot Online | Uptime: {} | Ping: {} Seconds".format(str(datetime.datetime.utcnow()-self.client.starttime).replace(str(datetime.datetime.utcnow()-self.client.starttime)[-7:],""),round(self.client.latency,3))
             conn.send(stmessage).encode()
     @commands.command()
     async def on_ready(self, ctx):
