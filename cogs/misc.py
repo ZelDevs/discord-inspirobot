@@ -49,7 +49,12 @@ class Misc(commands.Cog):
     async def invite(self, ctx):
         embed = discord.Embed(title="Invites!", description="Either invite the bot to your server, or join our support server using these links:")
         embed.add_field(name="Add the bot to your server!", value="https://discord.com/api/oauth2/authorize?client_id=732683980352127038&permissions=51201&scope=bot")
-        embed.add_field(name="Join our server!", value="https://discord.gg/GZFsWrm")
+        embed.add_field(name="Join our support server!", value="https://discord.gg/mt5wauZTnD")
+        await ctx.send(embed=embed)
+    @commands.command()
+    async def support(self, ctx):
+        embed = discord.Embed(title="Support link!", description="Join our support server using this link:")
+        embed.add_field(name="Join our support server!", value="https://discord.gg/mt5wauZTnD")
         await ctx.send(embed=embed)
     
     
