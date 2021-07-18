@@ -30,7 +30,11 @@ import sys
 from itertools import cycle
 
 # CONSTANT VARIABLES
-ROOT_DIR = os.path.dirname(__file__)
+BOT_NAME = "discord-inspirobot"
+if "nano.exe" in os.listdir(os.getcwd()):
+    ROOT_DIR = os.path.join(os.getcwd(), "Data/Bots/{}".format(BOT_NAME))
+else:
+    ROOT_DIR = os.getcwd()
 DATA_DIR = os.path.join(ROOT_DIR, "data")
 sys.path.append(ROOT_DIR)
 # TOKENS
