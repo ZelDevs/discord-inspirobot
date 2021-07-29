@@ -29,9 +29,15 @@ import os
 import sys
 from itertools import cycle
 
+def checknano():
+    for i in os.listdir(os.getcwd()):
+        if "nano" in i.lower():
+            return True
+    return False
+
 # CONSTANT VARIABLES
 BOT_NAME = "discord-inspirobot"
-if "nano.exe" in os.listdir(os.getcwd()):
+if checknano():
     ROOT_DIR = os.path.join(os.getcwd(), "Data/Bots/{}".format(BOT_NAME))
 else:
     ROOT_DIR = os.getcwd()
