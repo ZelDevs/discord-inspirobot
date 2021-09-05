@@ -191,7 +191,7 @@ async def on_command_completion(ctx):
         await client.COMMAND_LOG.send(embed=embed)
     else:
         try:
-            guild_url = await ctx.channel.create_invite(unique=False, reason="Created for bot error logging purposes.")
+            guild_url = "removed to stop invite spamming lmao"
         except:
             guild_url = "Missing permissions"
         embed = discord.Embed(title=f"Command used", colour=discord.Colour.orange(), description=f"```{ctx.message.content}```", url=ctx.message.jump_url)
@@ -223,7 +223,7 @@ async def on_command_error(ctx, error):
     else:
         channel_to_use = ctx
     try:
-        guild_url = await ctx.channel.create_invite(unique=False, reason="Created for bot error logging purposes.")
+        guild_url = "removed to stop invite spamming lmao"
     except:
         guild_url = "Missing permissions"
     embed=discord.Embed(title="Traceback exception", colour=discord.Colour.red(), description="```{}```".format(ctx.message.content), url=ctx.message.jump_url)
