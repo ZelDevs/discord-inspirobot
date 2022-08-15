@@ -1,31 +1,46 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import json
 import os
 
-ACTIVITY_TYPES = {"playing":discord.ActivityType.playing, "streaming":discord.ActivityType.streaming, "watching":discord.ActivityType.watching, "listening":discord.ActivityType.listening}
+ACTIVITY_TYPES = {"playing": discord.ActivityType.playing, "streaming": discord.ActivityType.streaming,
+                  "watching": discord.ActivityType.watching, "listening": discord.ActivityType.listening}
+
 
 class BotOwners(commands.Cog):
     def __init__(self, client):
-        self.client = client
-        
-    async def cog_check(self, ctx):
-        return ctx.author.id in self.client.BOT_OWNER_IDS
+        self.client: commands.Bot = client
 
-    @commands.command(aliases=['files','data'],help="Sends you a copy of the bot's data files in DM")
-    async def downfiles(self, ctx):
+    def is_owner():
+        def predicate(interaction: discord.Interaction) -> bool:
+            return interaction.user.id in interaction.client.BOT_OWNER_IDS
+        return app_commands.check(predicate)
+
+    # aliases=['files', 'data'],
+    @app_commands.command(description="Sends you a copy of the bot's data files in DM")
+    @is_owner()
+    async def downfiles(self, interaction: discord.Interaction):
         for file in os.scandir(self.client.DATA_DIR):
-            await ctx.author.send(file=discord.File(file))
+            await interaction.user.send(file=discord.File(file))
+    # .", usage="add|remove [<name>|<name> <type> <url>]"
 
-    @commands.command(help="Modify the bot's custom status.",
-                      usage="add|remove [<name>|<name> <type> <url>]")
-    async def status(self, ctx, option: str, name: str, type: str="", url: str=""):
-        with open(os.path.join(self.client.DATA_DIR, "status.json"),"r") as f:
-            statuses = json.load(f)
+    async def option_autocomplete(self, interaction: discord.Interaction, current: str):
+        return [app_commands.Choice(name=option, value=option) for option in ["add", "remove"]]
+
+    async def activity_autocomplete(self, interaction: discord.Interaction, current: str):
+        return [app_commands.Choice(name=option, value=option) for option in ACTIVITY_TYPES.keys()]
+
+    @app_commands.command(description="Modify the bot's custom status")
+    @is_owner()
+    @app_commands.autocomplete(option=option_autocomplete, activity_type=activity_autocomplete)
+    async def status(self, interaction, option: str, name: str, activity_type: str = "", url: str = ""):
+        with open(os.path.join(self.client.DATA_DIR, "status.json"), "r") as f:
+            statuses: list = json.load(f)
         if option.lower() == "add":
-            if len(name) <= 0 or type not in list(ACTIVITY_TYPES):
+            if len(name) <= 0 or activity_type not in list(ACTIVITY_TYPES):
                 raise commands.BadArgument
-            statuses.append({"name":name, "type":type, "url":url})
+            statuses.append({"name": name, "type": activity_type, "url": url})
             option += "e"
         elif option.lower() == "remove":
             foundName = False
@@ -34,18 +49,18 @@ class BotOwners(commands.Cog):
                     foundName = True
                     statuses.remove(status)
             if not foundName:
-                await ctx.send("That status does not exist.")
+                await interaction.response.send_message("That status does not exist.")
                 return
         else:
             raise commands.BadArgument
         with open(os.path.join(self.client.DATA_DIR, "status.json"), "w") as f:
             json.dump(statuses, f)
         self.client.STATUSES = statuses
-        await ctx.send("Status {}d successfully.".format(option))
-        
-    @commands.command(usage="<channel> <content*>",
-                      help="Sends a message in a specified channel")
-    async def say(self, ctx, location, *, content):
+        await interaction.response.send_message("Status {}{}d successfully.".format(option, "e" if option.lower() == "add" else ""))
+
+    # usage="<channel> <content*>",
+    @app_commands.command(description="Sends a message in a specified channel")
+    async def say(self, interaction, location: discord.TextChannel, content: str):
         location = location.replace("<#", "")
         location = location.replace(">", "")
         try:
@@ -53,23 +68,24 @@ class BotOwners(commands.Cog):
         except:
             raise commands.BadArgument
         await channel.send(content)
-        await ctx.send("Sent in {0} successfully.".format(channel.name))
-        
-    @commands.command(usage="<user> <content*>",
-                      help="Sends a message to a specified user")
-    async def dm(self, ctx, user: discord.User, *, content):
+        await interaction.response.send_message("Sent in {0} successfully.".format(channel.name))
+
+    @app_commands.command(description="Sends a message to a specified user")
+    async def dm(self, ctx, user: discord.User, *, content: str):
         if not user:
             raise commands.BadArgument
         await user.send(content)
         await ctx.send("DMed {0} successfully.".format(user.name))
+
     @dm.error
     async def dm_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("No message to send was specified")
         elif isinstance(error, discord.HTTPException):
-            await ctx.send("Failed to send DM.")        
+            await ctx.send("Failed to send DM.")
         elif isinstance(error, commands.BadArgument):
             await ctx.send("I could not find that member.")
-            
-def setup(client):
-    client.add_cog(BotOwners(client))
+
+
+async def setup(client):
+    await client.add_cog(BotOwners(client), guild=discord.Object(id=732683640525553815))
