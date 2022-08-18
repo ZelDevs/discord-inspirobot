@@ -119,7 +119,7 @@ client = Client(command_prefix=_get_prefix, case_insensitive=True,
 async def _msglog(msg):
     embed = discord.Embed(title=f"DM from {msg.author}", colour=discord.Colour.blue(
     ), description=f"```{msg.content}```")
-    embed.set_thumbnail(url=msg.author.avatar_url)
+    embed.set_thumbnail(url=msg.author.avatar.url)
     embed.set_footer(text=f"User ID: {msg.author.id}")
     embed.timestamp = datetime.datetime.utcnow()
     await client.DM_LOG.send(embed=embed)

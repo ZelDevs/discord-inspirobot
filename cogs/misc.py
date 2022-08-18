@@ -57,9 +57,16 @@ class Misc(commands.Cog):
                 embed.set_image(url=req.text)
                 await interaction.response.send_message(embed=embed)
             else:
-                await interaction.response.send_message("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
+                try:
+                    await interaction.response.send_message("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
+                except discord.errors.InteractionResponded:
+                    await interaction.followup.send("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
+
         except:
-            await interaction.response.send_message("Command failed successfully, please try again!")
+            try:
+                await interaction.response.send_message("Command failed successfully, please try again!")
+            except discord.errors.InteractionResponded:
+                await interaction.followup.send("Command failed successfully, please try again!")
 
     @app_commands.command()
     async def invite(self, interaction: discord.Interaction):
