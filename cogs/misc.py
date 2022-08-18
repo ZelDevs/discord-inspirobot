@@ -6,31 +6,11 @@ import requests
 import socket
 import threading
 import asyncio
-ip = "192.168.1.141"
-port = 30201
-try:
-    externalserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    externalserver.bind((ip, port))
-except:
-    print("ur not dev")
-    externalserver = None
 
 
 class Misc(commands.Cog):
     def __init__(self, client):
         self.client: commands.Bot = client
-
-    def updateserver(self):
-        while True:
-            externalserver.settimeout(60)
-            try:
-                externalserver.listen()
-                conn, addr = externalserver.accept()
-            except:
-                continue
-            stmessage = "🟢 | Bot Online | Uptime: {} | Ping: {} Seconds".format(str(datetime.datetime.utcnow(
-            )-self.client.starttime).replace(str(datetime.datetime.utcnow()-self.client.starttime)[-7:], ""), round(self.client.latency, 3))
-            conn.send(stmessage).encode()
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -55,18 +35,12 @@ class Misc(commands.Cog):
                 embed = discord.Embed(colour=discord.Colour.green())
                 embed.set_footer(text="Created using inspirobot.me")
                 embed.set_image(url=req.text)
-                await interaction.response.send_message(embed=embed)
+                await interaction.followup.send(embed=embed)
             else:
-                try:
-                    await interaction.response.send_message("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
-                except discord.errors.InteractionResponded:
-                    await interaction.followup.send("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
+                await interaction.followup.send("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
 
-        except:
-            try:
-                await interaction.response.send_message("Command failed successfully, please try again!")
-            except discord.errors.InteractionResponded:
-                await interaction.followup.send("Command failed successfully, please try again!")
+        except Exception as e:
+            await interaction.followup.send("Command failed successfully, please try again!")
 
     @app_commands.command()
     async def invite(self, interaction: discord.Interaction):
