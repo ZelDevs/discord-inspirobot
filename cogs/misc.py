@@ -3,40 +3,16 @@ from discord.ext import commands
 from discord import app_commands
 import datetime
 import requests
-import socket
-import threading
 import asyncio
-ip = "192.168.1.141"
-port = 30201
-try:
-    externalserver = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    externalserver.bind((ip, port))
-except:
-    print("ur not dev")
-    externalserver = None
 
 
 class Misc(commands.Cog):
     def __init__(self, client):
         self.client: commands.Bot = client
 
-    def updateserver(self):
-        while True:
-            externalserver.settimeout(60)
-            try:
-                externalserver.listen()
-                conn, addr = externalserver.accept()
-            except:
-                continue
-            stmessage = "🟢 | Bot Online | Uptime: {} | Ping: {} Seconds".format(str(datetime.datetime.utcnow(
-            )-self.client.starttime).replace(str(datetime.datetime.utcnow()-self.client.starttime)[-7:], ""), round(self.client.latency, 3))
-            conn.send(stmessage).encode()
-
     @commands.Cog.listener()
     async def on_ready(self):
-        usthread = threading.Thread(target=Misc.updateserver, args=(self,))
         await asyncio.sleep(5)
-        usthread.start()
 
     @app_commands.command()
     async def ping(self, interaction: discord.Interaction):
