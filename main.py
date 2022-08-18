@@ -57,6 +57,7 @@ BOT_OWNER_IDS = [285832267216191498, 370951560085372928,
                  303069460359675905, 362546658048868353, 654142589783769117]
 DEFAULT_PREFIX = "*"
 # Channel IDs
+SUPPORT_GUILD_ID = 732683640525553815
 ERROR_LOG_ID = 732683641024413851
 COMMAND_LOG_ID = 732683641024413852
 DM_LOG_ID = 732683641024413853
@@ -81,6 +82,7 @@ class Client(commands.Bot):
         self.SERVERS_JOINED_LOG = await self.fetch_channel(SERVERS_JOINED_LOG_ID)
         self.TEST_TEST = await self.fetch_channel(TEST_TEST_ID)
         self.MAIN_TEST = await self.fetch_channel(MAIN_TEST_ID)
+        self.SUPPORT_GUILD = await self.fetch_guild(SUPPORT_GUILD_ID)
         self.starttime = datetime.datetime.utcnow()
 
         with open(os.path.join(DATA_DIR, "status.json"), "r") as f:
@@ -182,7 +184,10 @@ async def on_guild_remove(guild: discord.Guild):
             title="\N{OUTBOX TRAY} Server Left: {}".format(guild.name),
             colour=discord.Colour.red(),
             description="```We now have a total of {0} servers and {1} users ({2} users lost).```".format(len(client.guilds), len(client.users), len(guild.members)))
-        embed.set_thumbnail(url=guild.icon.url)
+        try:
+            embed.set_thumbnail(url=guild.icon.url)
+        except:
+            pass
         embed.set_footer(text="Server ID: {}".format(guild.id))
         embed.timestamp = datetime.datetime.utcnow()
         await client.SERVERS_JOINED_LOG.send(embed=embed)
@@ -295,7 +300,7 @@ async def help(interaction: discord.Interaction):
     await interaction.response.send_message(embed=help_embed)
 
 
-@client.tree.command()
+@client.tree.command(guild=discord.Object(id=SUPPORT_GUILD_ID), description="Loads a specified cog.")
 @commands.is_owner()
 async def load(interaction: discord.Interaction, cog: str):
     await client.load_extension(f"cogs.{cog}")
@@ -303,7 +308,7 @@ async def load(interaction: discord.Interaction, cog: str):
     await interaction.response.send_message(embed=embed)
 
 
-@client.tree.command()
+@client.tree.command(guild=discord.Object(id=SUPPORT_GUILD_ID), description="Unloads a specified cog.")
 @commands.is_owner()
 async def unload(interaction, cog: str):
     await client.unload_extension(f"cogs.{cog}")
@@ -311,7 +316,7 @@ async def unload(interaction, cog: str):
     await interaction.response.send_message(embed=embed)
 
 
-@client.tree.command()  # aliases=["r", "re"]
+@client.tree.command(guild=discord.Object(id=SUPPORT_GUILD_ID), description="Reloads a specified cog.")
 @commands.is_owner()
 async def reload(interaction, cog: str):
     await client.reload_extension(f"cogs.{cog}")

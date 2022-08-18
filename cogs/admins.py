@@ -30,6 +30,18 @@ class Admins(commands.Cog):
             with open(os.path.join(self.client.DATA_DIR, "prefixes.json"), "w") as f:
                 json.dump(prefixes, f, indent=4)
 
+    # Error handling for prefix
+    @prefix.error
+    async def prefix_error(self, interaction: discord.Interaction, error):
+        with open(os.path.join(self.client.DATA_DIR, "prefixes.json"), "r") as f:
+            prefixes = json.load(f)
+        if isinstance(error, commands.BadArgument):
+            await interaction.response.send_message("The prefix must be a string.")
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await interaction.response.send_message("You must specify a prefix.")
+        elif isinstance(error, commands.MissingPermissions):
+            await interaction.response.send_message("You do not have permission to change the prefix. The current prefix is `{}`".format(prefixes[str(interaction.guild.id)]))
+
 
 async def setup(client: commands.Bot):
-    await client.add_cog(Admins(client), guild=discord.Object(id=732683640525553815))
+    await client.add_cog(Admins(client))

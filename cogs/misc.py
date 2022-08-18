@@ -62,4 +62,4 @@ class Misc(commands.Cog):
 
 
 async def setup(client):
-    await client.add_cog(Misc(client), guild=discord.Object(id=732683640525553815))
+    await client.add_cog(Misc(client))
