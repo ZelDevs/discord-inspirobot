@@ -3,8 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 import datetime
 import requests
-import socket
-import threading
 import asyncio
 
 
@@ -14,9 +12,7 @@ class Misc(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        usthread = threading.Thread(target=Misc.updateserver, args=(self,))
         await asyncio.sleep(5)
-        usthread.start()
 
     @app_commands.command()
     async def ping(self, interaction: discord.Interaction):

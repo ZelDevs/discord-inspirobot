@@ -28,28 +28,18 @@ import discord
 import datetime
 import json
 import sys
-import traceback
 import os
-import sys
 from itertools import cycle
-def checknano():
-    for i in os.listdir(os.getcwd()):
-        if "nano" in i.lower():
-            return True
-    return False
 
 
 # CONSTANT VARIABLES
 BOT_NAME = "discord-inspirobot"
-if checknano():
-    ROOT_DIR = os.path.join(os.getcwd(), "Data/Bots/{}".format(BOT_NAME))
-else:
-    ROOT_DIR = os.getcwd()
+ROOT_DIR = os.getcwd()
 DATA_DIR = os.path.join(ROOT_DIR, "data")
 sys.path.append(ROOT_DIR)
 # TOKENS
-MAIN_TOKEN = "NzMyNjgzOTgwMzUyMTI3MDM4.Xw4LOg.Rn4JWrKTUQnAllGUtf1E4ASLfiY"
-TEST_TOKEN = "NzMyNjg4ODY5OTA0MDg5MjE5.Xw4PuA.99GFI8iJK76_YbbcvO20ZjJk_4E"
+MAIN_TOKEN = str(os.getenv('QUOTETOKEN'))
+TEST_TOKEN = str(os.getenv('QUOTETOKENTEST'))
 # THIS DEFINES WHICH BOT SHOULD RUN, ONLY PUT MAIN_TOKEN IF RELEASING
 TOKEN = MAIN_TOKEN
 # PLEASE DO BE CAREFUL WITH THAT SHIT YOU HEAR ME
@@ -149,22 +139,10 @@ async def on_message(msg: discord.Message):
 @client.event
 async def on_guild_join(guild: discord.Guild):
     if TOKEN == MAIN_TOKEN:
-        try:
-            guild_url = await guild.create_invite(unique=False, reason="Created for bot logging purposes.")
-        except:
-            guild_url = None
-        if guild_url:
-            embed = discord.Embed(
-                title="\N{INBOX TRAY} Server Joined: {}".format(guild.name),
-                colour=discord.Colour.green(),
-                description="```We now have a total of {0} servers and {1} users ({2} users gained).```".format(
-                    len(client.guilds), len(client.users), len(guild.members)),
-                url=guild_url)
-        else:
-            embed = discord.Embed(
-                title="\N{INBOX TRAY} Server Joined: {}".format(guild.name),
-                colour=discord.Colour.green(),
-                description="```We now have a total of {0} servers and {1} users ({2} users gained).```".format(len(client.guilds), len(client.users), len(guild.members)))
+        embed = discord.Embed(
+            title="\N{INBOX TRAY} Server Joined: {}".format(guild.name),
+            colour=discord.Colour.green(),
+            description="```We now have a total of {0} servers```".format(len(client.guilds)))
         embed.set_footer(text="Server ID: {}".format(guild.id))
         embed.set_thumbnail(url=guild.icon.url)
         embed.timestamp = datetime.datetime.utcnow()
