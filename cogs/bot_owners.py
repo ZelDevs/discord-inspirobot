@@ -88,4 +88,4 @@ class BotOwners(commands.Cog):
 
 
 async def setup(client):
-    await client.add_cog(BotOwners(client), guild=discord.Object(id=732683640525553815))
+    await client.add_cog(BotOwners(client), guild=client.SUPPORT_GUILD)

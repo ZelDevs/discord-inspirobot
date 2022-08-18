@@ -31,11 +31,12 @@ class Misc(commands.Cog):
                 embed = discord.Embed(colour=discord.Colour.green())
                 embed.set_footer(text="Created using inspirobot.me")
                 embed.set_image(url=req.text)
-                await interaction.response.send_message(embed=embed)
+                await interaction.followup.send(embed=embed)
             else:
-                await interaction.response.send_message("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
-        except:
-            await interaction.response.send_message("Command failed successfully, please try again!")
+                await interaction.followup.send("Sadly, an error happened. Please wait a few minutes/hours (?) before getting inspired :pray:")
+
+        except Exception as e:
+            await interaction.followup.send("Command failed successfully, please try again!")
 
     @app_commands.command()
     async def invite(self, interaction: discord.Interaction):
@@ -57,4 +58,4 @@ class Misc(commands.Cog):
 
 
 async def setup(client):
-    await client.add_cog(Misc(client), guild=discord.Object(id=732683640525553815))
+    await client.add_cog(Misc(client))
